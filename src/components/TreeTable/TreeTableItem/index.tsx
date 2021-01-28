@@ -5,13 +5,11 @@ import {
   useDrag,
   useDrop,
 } from 'react-dnd'
-import { TreeTableArr } from '..'
 
 interface TreeTableItemProp {
   record: { key: string; title: string }
   move: any
   level: number[]
-  dataSource: TreeTableArr
 }
 
 export interface DragItem {
@@ -19,13 +17,11 @@ export interface DragItem {
   level: number[]
 }
 interface DropResult {
-  name: string
   dropEffect: string
-  allowedDropEffect: string
+  level: number[]
 }
 const TreeTableItem: FC<TreeTableItemProp> = ({
   record,
-  dataSource,
   move,
   level,
   children,
@@ -36,10 +32,10 @@ const TreeTableItem: FC<TreeTableItemProp> = ({
     item,
     end(item: DragItem | undefined, monitor: DragSourceMonitor) {
       const dropResult: DropResult = monitor.getDropResult()
-      // console.log('dropResult', dropResult)
-      // console.log('item', item)
-      if (item && dropResult) {
-        // console.log('拖拽成功')
+      console.log('dropResult', dropResult)
+      if (item && dropResult.level) {
+        console.log('拖拽成功')
+        move(level, dropResult.level, record)
       }
     },
     collect: (monitor: any) => {
@@ -53,11 +49,10 @@ const TreeTableItem: FC<TreeTableItemProp> = ({
     accept: 'drag',
     drop: (data: any) => {
       console.log('endKey', level)
-      console.log('startKey', data.level)
-      move(data.level, level, data.record)
-      // console.log('dataSource', dataSource)
-      // setData(dataSource)
-      return {}
+      if (data.record.key === record.key) {
+        return {}
+      }
+      return { level }
     },
     collect: (monitor: DropTargetMonitor) => {
       // console.log('didDrop', monitor.didDrop())

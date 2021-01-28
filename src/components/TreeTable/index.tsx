@@ -15,11 +15,6 @@ interface TreeTableProps {
   dataSource: TreeTableData[]
 }
 
-export interface ArrWithIdx {
-  arr: TreeTableArr
-  idx: number
-}
-
 const TreeTable: FC<TreeTableProps> = ({ dataSource }) => {
   const { treeData, move } = useTreeData(dataSource)
   return (
@@ -46,8 +41,7 @@ function generate(
           key={item.key}
           level={[...level, index]}
           record={item}
-          move={moveData}
-          dataSource={dataSource}>
+          move={moveData}>
           {generate(item.children, moveData, dataSource, [...level, index])}
         </TreeTableItem>
       )
@@ -58,7 +52,6 @@ function generate(
         level={[...level, index]}
         record={item}
         move={moveData}
-        dataSource={dataSource}
       />
     )
   })

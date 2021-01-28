@@ -1,4 +1,8 @@
-import { ArrWithIdx, TreeTableArr } from '../index'
+import { TreeTableArr } from '..'
+interface ArrWithIdx {
+  arr: TreeTableArr
+  idx: number
+}
 
 export function findIndex(arr: TreeTableArr, key: string) {
   let res = { arr, idx: -1 }

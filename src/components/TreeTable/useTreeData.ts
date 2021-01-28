@@ -5,6 +5,7 @@ export default function useTreeData(data: TreeTableArr) {
   const [treeData, setTreeData] = useState(data)
   const move = (start: number[], end: number[], record: TreeTableData) => {
     const data = update(treeData, moveChange(start, 'remove'))
+
     // console.log('remove', data)
     // console.log('add', update(data, moveChange(end, 'add', record)))
     setTreeData(update(data, moveChange(end, 'add', record)))
