@@ -6,18 +6,17 @@ import {
   useDrop,
 } from 'react-dnd'
 import { TreeTableArr } from '..'
-import { findIndex } from '../utils'
 
 interface TreeTableItemProp {
   record: { key: string; title: string }
   move: any
-  level: number
+  level: number[]
   dataSource: TreeTableArr
 }
 
 export interface DragItem {
   type: string
-  key: string
+  level: number[]
 }
 interface DropResult {
   name: string
@@ -28,11 +27,11 @@ const TreeTableItem: FC<TreeTableItemProp> = ({
   record,
   dataSource,
   move,
+  level,
   children,
 }) => {
-  const item = { key: record.key, type: 'drag' }
+  const item = { level, record, type: 'drag' }
   const ref = useRef(null)
-
   const [, drag] = useDrag({
     item,
     end(item: DragItem | undefined, monitor: DragSourceMonitor) {
@@ -53,9 +52,9 @@ const TreeTableItem: FC<TreeTableItemProp> = ({
   const [, drop] = useDrop({
     accept: 'drag',
     drop: (data: any) => {
-      console.log('endKey', record.key)
-      console.log('startKey', data.key)
-      move(findIndex(dataSource, data.key), findIndex(dataSource, record.key))
+      console.log('endKey', level)
+      console.log('startKey', data.level)
+      move(data.level, level, data.record)
       // console.log('dataSource', dataSource)
       // setData(dataSource)
       return {}

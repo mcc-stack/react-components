@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import TreeTableItem from './TreeTableItem'
 import useTreeData from './useTreeData'
 
-interface TreeTableData {
+export interface TreeTableData {
   key: string
   title: string
   children?: TreeTableData[]
@@ -21,11 +21,11 @@ export interface ArrWithIdx {
 }
 
 const TreeTable: FC<TreeTableProps> = ({ dataSource }) => {
-  const { treeData, moveData } = useTreeData(dataSource)
+  const { treeData, move } = useTreeData(dataSource)
   return (
     <section>
       <DndProvider backend={HTML5Backend}>
-        {generate(treeData, moveData, treeData)}
+        {generate(treeData, move, treeData)}
       </DndProvider>
     </section>
   )
@@ -37,25 +37,25 @@ function generate(
   data: TreeTableArr,
   moveData: any,
   dataSource: TreeTableArr,
-  level: number = 0
+  level: number[] = []
 ) {
-  return data.map(item => {
+  return data.map((item, index) => {
     if (item.children) {
       return (
         <TreeTableItem
           key={item.key}
-          level={level}
+          level={[...level, index]}
           record={item}
           move={moveData}
           dataSource={dataSource}>
-          {generate(item.children, moveData, dataSource, level + 1)}
+          {generate(item.children, moveData, dataSource, [...level, index])}
         </TreeTableItem>
       )
     }
     return (
       <TreeTableItem
         key={item.key}
-        level={level}
+        level={[...level, index]}
         record={item}
         move={moveData}
         dataSource={dataSource}
