@@ -1,26 +1,15 @@
 import { useState } from 'react'
-import { ArrWithIdx, TreeTableArr, TreeTableData } from '.'
+import { TreeTableArr, TreeTableData } from '.'
 import update from 'immutability-helper'
 export default function useTreeData(data: TreeTableArr) {
   const [treeData, setTreeData] = useState(data)
-  const moveData = (startArrWithIdx: ArrWithIdx, endArrWithIdx: ArrWithIdx) => {
-    console.log('start', startArrWithIdx, 'end', endArrWithIdx)
-    endArrWithIdx.arr.splice(
-      0,
-      endArrWithIdx.idx,
-      ...startArrWithIdx.arr.splice(startArrWithIdx.idx, 1)
-    )
-    update(treeData, { $splice: {} })
-    setTreeData([...treeData])
-    console.log('拖拽后data', [...treeData])
-  }
   const move = (start: number[], end: number[], record: TreeTableData) => {
     const data = update(treeData, moveChange(start, 'remove'))
     // console.log('remove', data)
     // console.log('add', update(data, moveChange(end, 'add', record)))
     setTreeData(update(data, moveChange(end, 'add', record)))
   }
-  return { treeData, moveData, move }
+  return { treeData, move }
 }
 
 type changeType = 'add' | 'remove'
